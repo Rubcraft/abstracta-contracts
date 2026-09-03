@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Until Abstracta reaches 1.0, fixes are provided for the latest released minor version.
+Until AbstractaContracts reaches 1.0, fixes are provided for the latest released minor version.
 
 ## Reporting a vulnerability
 

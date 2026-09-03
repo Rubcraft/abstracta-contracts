@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "abstracta/version"
-require_relative "abstracta/errors"
-require_relative "abstracta/internal/class_methods"
-require_relative "abstracta/internal/constructor_guard"
-require_relative "abstracta/internal/contract"
-require_relative "abstracta/internal/interface"
+require_relative "abstracta_contracts/version"
+require_relative "abstracta_contracts/errors"
+require_relative "abstracta_contracts/internal/class_methods"
+require_relative "abstracta_contracts/internal/constructor_guard"
+require_relative "abstracta_contracts/internal/contract"
+require_relative "abstracta_contracts/internal/interface"
 
-module Abstracta
+module AbstractaContracts
   MUTEX_CREATION_LOCK = Mutex.new
   private_constant :MUTEX_CREATION_LOCK
 
@@ -39,7 +39,7 @@ module Abstracta
     end
 
     def install(base)
-      raise TypeError, "Abstracta can only be included in classes" unless base.is_a?(Class)
+      raise TypeError, "AbstractaContracts can only be included in classes" unless base.is_a?(Class)
 
       base.extend(Internal::ClassMethods) unless base.singleton_class < Internal::ClassMethods
       base.singleton_class.prepend(Internal::ConstructorGuard) unless base.singleton_class < Internal::ConstructorGuard
@@ -48,13 +48,14 @@ module Abstracta
     end
 
     def define_interface(base, instance_methods:, class_methods:)
-      if base.instance_variable_defined?(:@abstracta_interface_defined)
-        raise Internal::InterfaceAlreadyDefinedError, "#{interface_name(base)} is already an Abstracta interface"
+      if base.instance_variable_defined?(:@abstracta_contracts_interface_defined)
+        raise Internal::InterfaceAlreadyDefinedError,
+              "#{interface_name(base)} is already an AbstractaContracts interface"
       end
 
-      base.instance_variable_set(:@abstracta_interface_defined, true)
-      base.instance_variable_set(:@abstracta_interface_instance_methods, instance_methods.freeze)
-      base.instance_variable_set(:@abstracta_interface_class_methods, class_methods.freeze)
+      base.instance_variable_set(:@abstracta_contracts_interface_defined, true)
+      base.instance_variable_set(:@abstracta_contracts_interface_instance_methods, instance_methods.freeze)
+      base.instance_variable_set(:@abstracta_contracts_interface_class_methods, class_methods.freeze)
       base.extend(Internal::InterfaceDefinition) unless base.singleton_class < Internal::InterfaceDefinition
       base
     end
@@ -66,7 +67,7 @@ module Abstracta
     def validate_interface!(interface)
       return interface if interface?(interface)
 
-      raise Internal::InvalidInterfaceError, "#{interface.inspect} is not an Abstracta interface"
+      raise Internal::InvalidInterfaceError, "#{interface.inspect} is not an AbstractaContracts interface"
     end
 
     def normalize_interfaces(interfaces)
@@ -91,7 +92,7 @@ module Abstracta
     def register_instance_methods(base, names)
       install(base)
       synchronize(base) do
-        declared = base.send(:abstracta_declared_instance_methods)
+        declared = base.send(:abstracta_contracts_declared_instance_methods)
         names.each { |name| declared << name unless declared.include?(name) }
       end
     end
@@ -99,17 +100,17 @@ module Abstracta
     def register_class_methods(base, names)
       install(base)
       synchronize(base) do
-        declared = base.send(:abstracta_declared_class_methods)
+        declared = base.send(:abstracta_contracts_declared_class_methods)
         names.each { |name| declared << name unless declared.include?(name) }
       end
     end
 
     def required_instance_methods_for(klass)
-      required_methods_for(klass, :abstracta_declared_instance_methods)
+      required_methods_for(klass, :abstracta_contracts_declared_instance_methods)
     end
 
     def required_class_methods_for(klass)
-      required_methods_for(klass, :abstracta_declared_class_methods)
+      required_methods_for(klass, :abstracta_contracts_declared_class_methods)
     end
 
     def missing_instance_methods_for(klass)
@@ -129,9 +130,9 @@ module Abstracta
 
       klass.ancestors.reverse_each do |ancestor|
         next unless ancestor.is_a?(Class)
-        next unless ancestor.respond_to?(:abstracta_direct_interfaces, true)
+        next unless ancestor.respond_to?(:abstracta_contracts_direct_interfaces, true)
 
-        ancestor.send(:abstracta_direct_interfaces).each do |interface|
+        ancestor.send(:abstracta_contracts_direct_interfaces).each do |interface|
           interface_hierarchy(interface).each { |candidate| result << candidate unless result.include?(candidate) }
         end
       end
@@ -142,14 +143,14 @@ module Abstracta
     def interface_instance_methods_for(interface)
       validate_interface!(interface)
       interface_hierarchy(interface).flat_map do |candidate|
-        candidate.instance_variable_get(:@abstracta_interface_instance_methods) || []
+        candidate.instance_variable_get(:@abstracta_contracts_interface_instance_methods) || []
       end.uniq.freeze
     end
 
     def interface_class_methods_for(interface)
       validate_interface!(interface)
       interface_hierarchy(interface).flat_map do |candidate|
-        candidate.instance_variable_get(:@abstracta_interface_class_methods) || []
+        candidate.instance_variable_get(:@abstracta_contracts_interface_class_methods) || []
       end.uniq.freeze
     end
 
@@ -188,10 +189,13 @@ module Abstracta
     private
 
     def mutex_for(base)
-      return base.instance_variable_get(:@abstracta_mutex) if base.instance_variable_defined?(:@abstracta_mutex)
+      if base.instance_variable_defined?(:@abstracta_contracts_mutex)
+        return base.instance_variable_get(:@abstracta_contracts_mutex)
+      end
 
       MUTEX_CREATION_LOCK.synchronize do
-        base.instance_variable_get(:@abstracta_mutex) || base.instance_variable_set(:@abstracta_mutex, Mutex.new)
+        base.instance_variable_get(:@abstracta_contracts_mutex) ||
+          base.instance_variable_set(:@abstracta_contracts_mutex, Mutex.new)
       end
     end
 

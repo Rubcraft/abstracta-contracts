@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Abstracta
+module AbstractaContracts
   module Internal
     class Contract < Module
       attr_reader :instance_methods, :class_methods
@@ -12,7 +12,7 @@ module Abstracta
       end
 
       def included(base)
-        Abstracta.install(base)
+        AbstractaContracts.install(base)
         base.abstract_method(*instance_methods) unless instance_methods.empty?
         base.abstract_class_method(*class_methods) unless class_methods.empty?
       end

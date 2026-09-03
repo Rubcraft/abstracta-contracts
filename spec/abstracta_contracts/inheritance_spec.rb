@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Abstracta inheritance" do
+RSpec.describe "AbstractaContracts inheritance" do
   it "accumulates contracts through multiple inheritance levels" do
     a = Class.new do
-      include Abstracta.with_methods(:foo, :bar)
+      include AbstractaContracts.with_methods(:foo, :bar)
     end
 
     b = Class.new(a) do
@@ -24,7 +24,7 @@ RSpec.describe "Abstracta inheritance" do
 
   it "requires a fresh implementation when a descendant redeclares a method abstract" do
     a = Class.new do
-      include Abstracta.with_methods(:call)
+      include AbstractaContracts.with_methods(:call)
     end
 
     b = Class.new(a) do
@@ -50,7 +50,7 @@ RSpec.describe "Abstracta inheritance" do
     end
 
     base = Class.new do
-      include Abstracta.with_methods(:call)
+      include AbstractaContracts.with_methods(:call)
     end
 
     implementation = Class.new(base) do
@@ -67,7 +67,7 @@ RSpec.describe "Abstracta inheritance" do
 
     base = Class.new do
       include implementation_module
-      include Abstracta.with_methods(:call)
+      include AbstractaContracts.with_methods(:call)
     end
 
     expect(base.missing_abstract_methods).to eq([:call])
@@ -75,7 +75,7 @@ RSpec.describe "Abstracta inheritance" do
 
   it "does not inherit the explicit abstract marker" do
     base = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       abstract_class!
     end

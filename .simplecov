@@ -6,8 +6,8 @@ SimpleCov.configure do
   skip "/spec/"
   skip "/vendor/"
 
-  group "Core", "lib/abstracta.rb"
-  group "Components", "lib/abstracta"
+  group "Core", "lib/abstracta_contracts.rb"
+  group "Components", "lib/abstracta_contracts"
 
   cover "lib/**/*.rb"
 

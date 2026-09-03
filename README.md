@@ -2,37 +2,37 @@
 
 ## Public API
 
-Abstracta exposes one supported entry point:
+AbstractaContracts exposes one supported entry point:
 
 ```ruby
-require "abstracta"
+require "abstracta_contracts"
 ```
 
 The supported root API is intentionally small:
 
-- `Abstracta.with_methods`
-- `Abstracta.interface`
-- `Abstracta::Error`
-- `Abstracta::VERSION`
-- the class DSL installed by `include Abstracta`: `abstract_class!`, `abstract_method`, `abstract_class_method`, and `implements`
-- the documented introspection methods installed by `include Abstracta`
+- `AbstractaContracts.with_methods`
+- `AbstractaContracts.interface`
+- `AbstractaContracts::Error`
+- `AbstractaContracts::VERSION`
+- the class DSL installed by `include AbstractaContracts`: `abstract_class!`, `abstract_method`, `abstract_class_method`, and `implements`
+- the documented introspection methods installed by `include AbstractaContracts`
 
-Implementation modules, contract objects, guards, and specialized errors live behind `Abstracta::Internal` and are not public API. No pre-release compatibility entry points are shipped.
+Implementation modules, contract objects, guards, and specialized errors live behind `AbstractaContracts::Internal` and are not public API. No pre-release compatibility entry points are shipped.
 
 
 Declarative abstract classes and interfaces for Ruby.
 
 > **Gem:** `abstracta-contracts`  
-> **Namespace:** `Abstracta`
+> **Namespace:** `AbstractaContracts`
 
 ## Installation
 
 ```ruby
-gem "abstracta-contracts"
+gem "abstracta-contracts", require: "abstracta_contracts"
 ```
 
 ```ruby
-require "abstracta"
+require "abstracta_contracts"
 ```
 
 ## Abstract classes
@@ -41,7 +41,7 @@ The compact API is the recommended form:
 
 ```ruby
 class FeatureProvider
-  include Abstracta.with_methods(:enabled?, :features)
+  include AbstractaContracts.with_methods(:enabled?, :features)
 end
 ```
 
@@ -63,7 +63,7 @@ Class-method contracts use `class_methods:`:
 
 ```ruby
 class Provider
-  include Abstracta.with_methods(:call, class_methods: [:provider_name])
+  include AbstractaContracts.with_methods(:call, class_methods: [:provider_name])
 end
 ```
 
@@ -71,7 +71,7 @@ For dynamic or incremental declarations, use the explicit DSL:
 
 ```ruby
 class Provider
-  include Abstracta
+  include AbstractaContracts
 
   abstract_class!
   abstract_method :enabled?
@@ -87,7 +87,7 @@ end
 `with_methods` returns a reusable module-like contract:
 
 ```ruby
-cache_contract = Abstracta.with_methods(:read, :write, :delete)
+cache_contract = AbstractaContracts.with_methods(:read, :write, :delete)
 
 class RedisCache
   include cache_contract
@@ -104,7 +104,7 @@ Interfaces are separate from abstract classes:
 
 ```ruby
 module Cacheable
-  include Abstracta.interface(
+  include AbstractaContracts.interface(
     :read,
     :write,
     :delete,
@@ -113,11 +113,11 @@ module Cacheable
 end
 ```
 
-Classes opt into Abstracta and explicitly declare interfaces:
+Classes opt into AbstractaContracts and explicitly declare interfaces:
 
 ```ruby
 class RedisCache
-  include Abstracta
+  include AbstractaContracts
   implements Cacheable
 
   def read(key) = nil
@@ -127,20 +127,20 @@ class RedisCache
 end
 ```
 
-Abstracta deliberately does not add `implements` to every Ruby class.
+AbstractaContracts deliberately does not add `implements` to every Ruby class.
 
 ### Interface inheritance and defaults
 
-An interface may include another Abstracta interface. Interface modules may also provide default instance methods; those methods satisfy their requirements.
+An interface may include another AbstractaContracts interface. Interface modules may also provide default instance methods; those methods satisfy their requirements.
 
 ```ruby
 module Readable
-  include Abstracta.interface(:read)
+  include AbstractaContracts.interface(:read)
 end
 
 module Cacheable
   include Readable
-  include Abstracta.interface(:write)
+  include AbstractaContracts.interface(:write)
 
   def read(key) = nil
 end
@@ -184,7 +184,7 @@ RedisCache.missing_interface_class_methods
 - Modules included below an abstract declaration can satisfy instance-method contracts.
 - Interfaces remain distinct from abstract classes.
 - Interface requirements can be satisfied by the class, inherited implementations, or interface defaults.
-- Abstracta has no runtime dependencies.
+- AbstractaContracts has no runtime dependencies.
 
 ## Development
 

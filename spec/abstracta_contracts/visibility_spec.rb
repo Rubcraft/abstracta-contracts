@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Abstracta method visibility" do
+RSpec.describe "AbstractaContracts method visibility" do
   it "allows private instance methods to satisfy a contract" do
     base = Class.new do
-      include Abstracta.with_methods(:secret)
+      include AbstractaContracts.with_methods(:secret)
     end
 
     child = Class.new(base) do
@@ -17,7 +17,7 @@ RSpec.describe "Abstracta method visibility" do
 
   it "allows private class methods to satisfy a class contract" do
     base = Class.new do
-      include Abstracta.with_methods(class_methods: [:secret])
+      include AbstractaContracts.with_methods(class_methods: [:secret])
     end
 
     child = Class.new(base) do
