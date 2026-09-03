@@ -6,12 +6,14 @@ RSpec.describe "Abstracta reusable contracts" do
 
     first = Class.new do
       include contract
+
       def read = :first
       def write = :first
     end
 
     second = Class.new do
       include contract
+
       def read = :second
       def write = :second
     end

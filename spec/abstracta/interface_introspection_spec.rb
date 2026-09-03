@@ -7,6 +7,7 @@ RSpec.describe "Abstracta interface introspection" do
 
     base = Class.new do
       include Abstracta
+
       implements first
     end
 

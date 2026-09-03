@@ -76,6 +76,7 @@ RSpec.describe "Abstracta inheritance" do
   it "does not inherit the explicit abstract marker" do
     base = Class.new do
       include Abstracta
+
       abstract_class!
     end
 

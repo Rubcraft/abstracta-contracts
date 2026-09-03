@@ -21,6 +21,15 @@ Metrics/BlockLength:
     - "spec/**/*"
     - "*.gemspec"
 
+# Abstracta's public facade intentionally centralizes contract and interface lookup.
+Metrics/ClassLength:
+  Exclude:
+    - "lib/abstracta.rb"
+
+Metrics/ModuleLength:
+  Exclude:
+    - "lib/abstracta.rb"
+
 Style/Documentation:
   Enabled: false
 

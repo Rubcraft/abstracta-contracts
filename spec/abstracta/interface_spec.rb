@@ -13,11 +13,27 @@ RSpec.describe "Abstracta interfaces" do
     expect(cacheable.interface_class_methods).to eq([:adapter_name])
   end
 
+  it "rejects an empty interface" do
+    expect { Abstracta.interface }.to raise_error(ArgumentError, /at least one/)
+  end
+
+  it "rejects including an interface definition in a class" do
+    expect { Class.new { include Abstracta.interface(:read) } }.to raise_error(TypeError)
+  end
+
+  it "rejects defining the same interface module twice" do
+    interface = Module.new { include Abstracta.interface(:read) }
+
+    expect { interface.include(Abstracta.interface(:write)) }
+      .to raise_error(Abstracta::Error, /already an Abstracta interface/)
+  end
+
   it "lets an Abstracta class implement an interface" do
     interface = cacheable
 
     implementation = Class.new do
       include Abstracta
+
       implements interface
 
       def read = :ok
@@ -38,6 +54,7 @@ RSpec.describe "Abstracta interfaces" do
 
     implementation = Class.new do
       include Abstracta
+
       implements interface
 
       def read = :ok
@@ -55,6 +72,7 @@ RSpec.describe "Abstracta interfaces" do
 
     base = Class.new do
       include Abstracta
+
       implements interface
     end
 
@@ -77,6 +95,7 @@ RSpec.describe "Abstracta interfaces" do
 
     implementation = Class.new do
       include Abstracta
+
       implements interface
 
       def write = :ok
@@ -98,6 +117,7 @@ RSpec.describe "Abstracta interfaces" do
 
     implementation = Class.new do
       include Abstracta
+
       implements cache
 
       def read = :ok
@@ -122,5 +142,18 @@ RSpec.describe "Abstracta interfaces" do
 
   it "does not monkey patch Class with implements" do
     expect(Class.method_defined?(:implements)).to be(false)
+  end
+
+  it "deduplicates repeated interface implementations" do
+    interface = cacheable
+
+    implementation = Class.new do
+      include Abstracta
+
+      implements interface
+      implements interface
+    end
+
+    expect(implementation.direct_interfaces).to eq([interface])
   end
 end
