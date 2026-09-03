@@ -1,0 +1,47 @@
+plugins:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - "vendor/**/*"
+    - "tmp/**/*"
+    - "coverage/**/*"
+    - "pkg/**/*"
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 8
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/NamedSubject:
+  Enabled: false
+
+# Development tooling belongs in Gemfile, not in the published gem specification.
+Gemspec/DevelopmentDependencies:
+  Enabled: false
