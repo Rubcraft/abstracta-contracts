@@ -215,6 +215,8 @@ module Abstracta
       declaration_lookup_owner = singleton ? declaration_owner.singleton_class : declaration_owner
 
       implementation_owner = lookup_class.instance_method(name).owner
+      return true if implementation_owner == declaration_lookup_owner
+
       ancestors = lookup_class.ancestors
       implementation_index = ancestors.index(implementation_owner)
       declaration_index = ancestors.index(declaration_lookup_owner)

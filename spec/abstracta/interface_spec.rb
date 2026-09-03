@@ -14,9 +14,11 @@ RSpec.describe "Abstracta interfaces" do
   end
 
   it "lets an Abstracta class implement an interface" do
+    interface = cacheable
+
     implementation = Class.new do
       include Abstracta
-      implements cacheable
+      implements interface
 
       def read = :ok
       def write = :ok
@@ -32,9 +34,11 @@ RSpec.describe "Abstracta interfaces" do
   end
 
   it "prevents instantiation while interface methods are missing" do
+    interface = cacheable
+
     implementation = Class.new do
       include Abstracta
-      implements cacheable
+      implements interface
 
       def read = :ok
     end
@@ -47,9 +51,11 @@ RSpec.describe "Abstracta interfaces" do
   end
 
   it "inherits implemented interfaces through class inheritance" do
+    interface = cacheable
+
     base = Class.new do
       include Abstracta
-      implements cacheable
+      implements interface
     end
 
     implementation = Class.new(base) do

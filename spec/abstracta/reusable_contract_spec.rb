@@ -20,4 +20,14 @@ RSpec.describe "Abstracta reusable contracts" do
     expect(second).to be_concrete
   end
 
+  it "accepts instance and class methods implemented by the declaring class" do
+    implementation = Class.new do
+      include Abstracta.with_methods(:read, class_methods: [:adapter_name])
+
+      def read = :ok
+      def self.adapter_name = :memory
+    end
+
+    expect(implementation).to be_concrete
+  end
 end
