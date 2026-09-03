@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "thread"
 require_relative "abstracta/version"
 require_relative "abstracta/errors"
 require_relative "abstracta/internal/class_methods"
@@ -9,6 +8,9 @@ require_relative "abstracta/internal/contract"
 require_relative "abstracta/internal/interface"
 
 module Abstracta
+  MUTEX_CREATION_LOCK = Mutex.new
+  private_constant :MUTEX_CREATION_LOCK
+
   class << self
     def included(base)
       install(base)
@@ -37,9 +39,7 @@ module Abstracta
     end
 
     def install(base)
-      unless base.is_a?(Class)
-        raise TypeError, "Abstracta can only be included in classes"
-      end
+      raise TypeError, "Abstracta can only be included in classes" unless base.is_a?(Class)
 
       base.extend(Internal::ClassMethods) unless base.singleton_class < Internal::ClassMethods
       base.singleton_class.prepend(Internal::ConstructorGuard) unless base.singleton_class < Internal::ConstructorGuard
@@ -173,8 +173,8 @@ module Abstracta
       end
     end
 
-    def synchronize(base, &block)
-      mutex_for(base).synchronize(&block)
+    def synchronize(base, &)
+      mutex_for(base).synchronize(&)
     end
 
     def class_name(klass)
@@ -195,8 +195,6 @@ module Abstracta
       end
     end
 
-    MUTEX_CREATION_LOCK = Mutex.new
-
     def required_methods_for(klass, reader)
       declarations = {}
 
@@ -215,6 +213,8 @@ module Abstracta
       declaration_lookup_owner = singleton ? declaration_owner.singleton_class : declaration_owner
 
       implementation_owner = lookup_class.instance_method(name).owner
+      return true if implementation_owner == declaration_lookup_owner
+
       ancestors = lookup_class.ancestors
       implementation_index = ancestors.index(implementation_owner)
       declaration_index = ancestors.index(declaration_lookup_owner)
@@ -235,7 +235,7 @@ module Abstracta
     def interface_hierarchy(interface)
       validate_interface!(interface)
 
-      interface.ancestors.reverse_each.each_with_object([]) do |ancestor, result|
+      interface.ancestors.reverse_each.with_object([]) do |ancestor, result|
         next unless interface?(ancestor)
 
         result << ancestor unless result.include?(ancestor)

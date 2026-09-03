@@ -43,12 +43,18 @@ RSpec.describe Abstracta do
     end
 
     it "rejects an empty contract" do
-      expect { Abstracta.with_methods }.to raise_error(ArgumentError, /at least one/)
+      expect { described_class.with_methods }.to raise_error(ArgumentError, /at least one/)
     end
 
     it "rejects invalid method names" do
-      expect { Abstracta.with_methods(Object.new) }
+      expect { described_class.with_methods(Object.new) }
         .to raise_error(Abstracta::Error)
+      expect { described_class.with_methods("not valid") }
+        .to raise_error(Abstracta::Error)
+    end
+
+    it "rejects inclusion in modules" do
+      expect { Module.new { include Abstracta } }.to raise_error(TypeError)
     end
   end
 
@@ -56,6 +62,7 @@ RSpec.describe Abstracta do
     it "supports include Abstracta with explicit declarations" do
       base = Class.new do
         include Abstracta
+
         abstract_class!
         abstract_method :read
         abstract_class_method :kind
@@ -69,9 +76,24 @@ RSpec.describe Abstracta do
     it "supports explicit abstract class method declarations" do
       base = Class.new do
         include Abstracta
+
         abstract_class_method :kind
       end
 
+      expect(base.abstract_class_methods).to eq([:kind])
+    end
+
+    it "deduplicates repeated declarations" do
+      base = Class.new do
+        include Abstracta
+
+        abstract_method :read, :read
+        abstract_method :read
+        abstract_class_method :kind, :kind
+        abstract_class_method :kind
+      end
+
+      expect(base.abstract_methods).to eq([:read])
       expect(base.abstract_class_methods).to eq([:kind])
     end
   end

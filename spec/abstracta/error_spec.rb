@@ -4,6 +4,7 @@ RSpec.describe "Abstracta errors" do
   it "raises a dedicated error for explicitly abstract classes without missing methods" do
     base = Class.new do
       include Abstracta
+
       abstract_class!
     end
 
@@ -17,5 +18,13 @@ RSpec.describe "Abstracta errors" do
 
     expect { base.new }
       .to raise_error(Abstracta::Error, /#run.*\.kind/)
+  end
+
+  it "describes class-only incomplete implementations" do
+    base = Class.new do
+      include Abstracta.with_methods(class_methods: [:kind])
+    end
+
+    expect { base.new }.to raise_error(Abstracta::Error, /\.kind/)
   end
 end

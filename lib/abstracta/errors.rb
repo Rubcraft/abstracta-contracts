@@ -12,9 +12,9 @@ module Abstracta
     class AbstractClassInstantiationError < Error
       attr_reader :abstract_class
 
-      def initialize(abstract_class)
+      def initialize(abstract_class, message: nil)
         @abstract_class = abstract_class
-        super("#{Abstracta.class_name(abstract_class)} is abstract and cannot be instantiated")
+        super(message || "#{Abstracta.class_name(abstract_class)} is abstract and cannot be instantiated")
       end
     end
 
@@ -22,22 +22,21 @@ module Abstracta
       attr_reader :missing_instance_methods, :missing_class_methods
 
       def initialize(abstract_class, instance_methods:, class_methods:)
-        @abstract_class = abstract_class
         @missing_instance_methods = instance_methods.freeze
         @missing_class_methods = class_methods.freeze
+        super(abstract_class, message: unimplemented_message(abstract_class, instance_methods, class_methods))
+      end
 
+      private
+
+      def unimplemented_message(abstract_class, instance_methods, class_methods)
         details = []
         unless instance_methods.empty?
-          details << "instance methods: #{instance_methods.map { |name| "##{name}" }.join(", ")}"
+          details << "instance methods: #{instance_methods.map { |name| "##{name}" }.join(', ')}"
         end
-        unless class_methods.empty?
-          details << "class methods: #{class_methods.map { |name| ".#{name}" }.join(", ")}"
-        end
+        details << "class methods: #{class_methods.map { |name| ".#{name}" }.join(', ')}" unless class_methods.empty?
 
-        Error.instance_method(:initialize).bind_call(
-          self,
-          "#{Abstracta.class_name(abstract_class)} has unimplemented contract #{details.join("; ")}"
-        )
+        "#{Abstracta.class_name(abstract_class)} has unimplemented contract #{details.join('; ')}"
       end
     end
   end

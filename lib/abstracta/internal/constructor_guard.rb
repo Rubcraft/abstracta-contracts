@@ -3,10 +3,10 @@
 module Abstracta
   module Internal
     module ConstructorGuard
-    def new(...)
-      validate_implementation! if respond_to?(:validate_implementation!)
-      super
-    end
+      def new(...)
+        validate_implementation! if respond_to?(:validate_implementation!)
+        super
+      end
     end
   end
 end
