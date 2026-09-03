@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Abstracta
+module AbstractaContracts
   module Internal
     module InterfaceDefinition
       def interface?
@@ -8,11 +8,11 @@ module Abstracta
       end
 
       def interface_methods
-        Abstracta.interface_instance_methods_for(self)
+        AbstractaContracts.interface_instance_methods_for(self)
       end
 
       def interface_class_methods
-        Abstracta.interface_class_methods_for(self)
+        AbstractaContracts.interface_class_methods_for(self)
       end
     end
 
@@ -27,10 +27,10 @@ module Abstracta
 
       def included(base)
         unless base.is_a?(Module) && !base.is_a?(Class)
-          raise TypeError, "Abstracta.interface must be included in a module"
+          raise TypeError, "AbstractaContracts.interface must be included in a module"
         end
 
-        Abstracta.define_interface(
+        AbstractaContracts.define_interface(
           base,
           instance_methods: instance_methods,
           class_methods: class_methods

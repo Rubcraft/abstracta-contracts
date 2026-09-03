@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Abstracta interfaces" do
+RSpec.describe "AbstractaContracts interfaces" do
   let(:cacheable) do
     Module.new do
-      include Abstracta.interface(:read, :write, class_methods: [:adapter_name])
+      include AbstractaContracts.interface(:read, :write, class_methods: [:adapter_name])
     end
   end
 
@@ -14,25 +14,25 @@ RSpec.describe "Abstracta interfaces" do
   end
 
   it "rejects an empty interface" do
-    expect { Abstracta.interface }.to raise_error(ArgumentError, /at least one/)
+    expect { AbstractaContracts.interface }.to raise_error(ArgumentError, /at least one/)
   end
 
   it "rejects including an interface definition in a class" do
-    expect { Class.new { include Abstracta.interface(:read) } }.to raise_error(TypeError)
+    expect { Class.new { include AbstractaContracts.interface(:read) } }.to raise_error(TypeError)
   end
 
   it "rejects defining the same interface module twice" do
-    interface = Module.new { include Abstracta.interface(:read) }
+    interface = Module.new { include AbstractaContracts.interface(:read) }
 
-    expect { interface.include(Abstracta.interface(:write)) }
-      .to raise_error(Abstracta::Error, /already an Abstracta interface/)
+    expect { interface.include(AbstractaContracts.interface(:write)) }
+      .to raise_error(AbstractaContracts::Error, /already an AbstractaContracts interface/)
   end
 
-  it "lets an Abstracta class implement an interface" do
+  it "lets an AbstractaContracts class implement an interface" do
     interface = cacheable
 
     implementation = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       implements interface
 
@@ -53,7 +53,7 @@ RSpec.describe "Abstracta interfaces" do
     interface = cacheable
 
     implementation = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       implements interface
 
@@ -64,14 +64,14 @@ RSpec.describe "Abstracta interfaces" do
     expect(implementation.missing_interface_class_methods).to eq([:adapter_name])
     expect(implementation).to be_abstract
     expect { implementation.new }
-      .to raise_error(Abstracta::Error, /#write.*\.adapter_name/)
+      .to raise_error(AbstractaContracts::Error, /#write.*\.adapter_name/)
   end
 
   it "inherits implemented interfaces through class inheritance" do
     interface = cacheable
 
     base = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       implements interface
     end
@@ -88,13 +88,13 @@ RSpec.describe "Abstracta interfaces" do
 
   it "accepts default instance methods supplied by the interface module" do
     interface = Module.new do
-      include Abstracta.interface(:read, :write)
+      include AbstractaContracts.interface(:read, :write)
 
       def read = :default
     end
 
     implementation = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       implements interface
 
@@ -107,16 +107,16 @@ RSpec.describe "Abstracta interfaces" do
 
   it "supports interface inheritance" do
     readable = Module.new do
-      include Abstracta.interface(:read)
+      include AbstractaContracts.interface(:read)
     end
 
     cache = Module.new do
       include readable
-      include Abstracta.interface(:write)
+      include AbstractaContracts.interface(:write)
     end
 
     implementation = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       implements cache
 
@@ -133,11 +133,11 @@ RSpec.describe "Abstracta interfaces" do
     ordinary_module = Module.new
 
     klass = Class.new do
-      include Abstracta
+      include AbstractaContracts
     end
 
     expect { klass.implements ordinary_module }
-      .to raise_error(Abstracta::Error)
+      .to raise_error(AbstractaContracts::Error)
   end
 
   it "does not monkey patch Class with implements" do
@@ -148,7 +148,7 @@ RSpec.describe "Abstracta interfaces" do
     interface = cacheable
 
     implementation = Class.new do
-      include Abstracta
+      include AbstractaContracts
 
       implements interface
       implements interface

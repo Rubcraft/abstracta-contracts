@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe Abstracta do
+RSpec.describe AbstractaContracts do
   describe ".with_methods" do
     it "declares abstract instance methods and prevents incomplete instantiation" do
       base = Class.new do
-        include Abstracta.with_methods(:enabled?, :features)
+        include AbstractaContracts.with_methods(:enabled?, :features)
       end
 
       expect(base).to be_abstract
       expect(base.abstract_methods).to eq(%i[enabled? features])
       expect(base.missing_abstract_methods).to eq(%i[enabled? features])
-      expect { base.new }.to raise_error(Abstracta::Error, /#enabled\?, #features/)
+      expect { base.new }.to raise_error(AbstractaContracts::Error, /#enabled\?, #features/)
     end
 
     it "allows a descendant to become concrete by implementing the full contract" do
       base = Class.new do
-        include Abstracta.with_methods(:enabled?, :features)
+        include AbstractaContracts.with_methods(:enabled?, :features)
       end
 
       implementation = Class.new(base) do
@@ -30,7 +30,7 @@ RSpec.describe Abstracta do
 
     it "supports class method contracts" do
       base = Class.new do
-        include Abstracta.with_methods(:call, class_methods: [:provider_name])
+        include AbstractaContracts.with_methods(:call, class_methods: [:provider_name])
       end
 
       implementation = Class.new(base) do
@@ -48,20 +48,20 @@ RSpec.describe Abstracta do
 
     it "rejects invalid method names" do
       expect { described_class.with_methods(Object.new) }
-        .to raise_error(Abstracta::Error)
+        .to raise_error(AbstractaContracts::Error)
       expect { described_class.with_methods("not valid") }
-        .to raise_error(Abstracta::Error)
+        .to raise_error(AbstractaContracts::Error)
     end
 
     it "rejects inclusion in modules" do
-      expect { Module.new { include Abstracta } }.to raise_error(TypeError)
+      expect { Module.new { include AbstractaContracts } }.to raise_error(TypeError)
     end
   end
 
   describe "advanced DSL" do
-    it "supports include Abstracta with explicit declarations" do
+    it "supports include AbstractaContracts with explicit declarations" do
       base = Class.new do
-        include Abstracta
+        include AbstractaContracts
 
         abstract_class!
         abstract_method :read
@@ -75,7 +75,7 @@ RSpec.describe Abstracta do
 
     it "supports explicit abstract class method declarations" do
       base = Class.new do
-        include Abstracta
+        include AbstractaContracts
 
         abstract_class_method :kind
       end
@@ -85,7 +85,7 @@ RSpec.describe Abstracta do
 
     it "deduplicates repeated declarations" do
       base = Class.new do
-        include Abstracta
+        include AbstractaContracts
 
         abstract_method :read, :read
         abstract_method :read

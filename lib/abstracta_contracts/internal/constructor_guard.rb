@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Abstracta
+module AbstractaContracts
   module Internal
     module ConstructorGuard
       def new(...)

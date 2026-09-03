@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative "lib/abstracta/version"
+require_relative "lib/abstracta_contracts/version"
 
 Gem::Specification.new do |spec|
   spec.name = "abstracta-contracts"
-  spec.version = Abstracta::VERSION
+  spec.version = AbstractaContracts::VERSION
   spec.authors = ["Juan Furattini"]
   spec.email = []
 
   spec.summary = "Declarative abstract classes, interfaces, and method contracts for Ruby."
   spec.description = <<~DESCRIPTION
-    Abstracta provides lightweight, dependency-free abstract class contracts for Ruby,
+    AbstractaContracts provides lightweight, dependency-free abstract class contracts for Ruby,
     including declarative instance/class methods, reusable interfaces, inherited contracts,
     runtime validation, and introspection.
   DESCRIPTION

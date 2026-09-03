@@ -27,7 +27,7 @@ jobs:
         id: version
         shell: bash
         run: |
-          version="$(ruby -Ilib -rabstracta/version -e 'print Abstracta::VERSION')"
+          version="$(ruby -Ilib -rabstracta_contracts/version -e 'print AbstractaContracts::VERSION')"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Verify release ref matches gem version
@@ -38,7 +38,7 @@ jobs:
         run: |
           expected="v${VERSION}"
           if [[ "$RELEASE_REF" != "$expected" ]]; then
-            echo "Release ref $RELEASE_REF does not match lib/abstracta/version.rb ($expected)."
+            echo "Release ref $RELEASE_REF does not match lib/abstracta_contracts/version.rb ($expected)."
             exit 1
           fi
 

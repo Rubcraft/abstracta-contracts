@@ -1,10 +1,10 @@
 # Release checklist
 
-Abstracta delegates repository initialization, commits, branches, version-control operations, and release-tag creation to the Rubcraft Toolkit. This repository intentionally does not duplicate those commands.
+AbstractaContracts delegates repository initialization, commits, branches, version-control operations, and release-tag creation to the Rubcraft Toolkit. This repository intentionally does not duplicate those commands.
 
-Before publishing an Abstracta release:
+Before publishing an AbstractaContracts release:
 
-1. Update `Abstracta::VERSION` and `CHANGELOG.md`.
+1. Update `AbstractaContracts::VERSION` and `CHANGELOG.md`.
 2. Run `bundle exec rubocop --parallel`.
 3. Run `COVERAGE=true bundle exec rspec`.
 4. Run `bundle exec rake build` and inspect the generated gem.

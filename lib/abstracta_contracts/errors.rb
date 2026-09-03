@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Abstracta
-  # Public base exception for all Abstracta errors.
+module AbstractaContracts
+  # Public base exception for all AbstractaContracts errors.
   class Error < StandardError; end
 
   module Internal
@@ -14,7 +14,7 @@ module Abstracta
 
       def initialize(abstract_class, message: nil)
         @abstract_class = abstract_class
-        super(message || "#{Abstracta.class_name(abstract_class)} is abstract and cannot be instantiated")
+        super(message || "#{AbstractaContracts.class_name(abstract_class)} is abstract and cannot be instantiated")
       end
     end
 
@@ -36,7 +36,7 @@ module Abstracta
         end
         details << "class methods: #{class_methods.map { |name| ".#{name}" }.join(', ')}" unless class_methods.empty?
 
-        "#{Abstracta.class_name(abstract_class)} has unimplemented contract #{details.join('; ')}"
+        "#{AbstractaContracts.class_name(abstract_class)} has unimplemented contract #{details.join('; ')}"
       end
     end
   end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Abstracta introspection" do
+RSpec.describe "AbstractaContracts introspection" do
   let(:base) do
     Class.new do
-      include Abstracta.with_methods(:read, :write, class_methods: [:adapter_name])
+      include AbstractaContracts.with_methods(:read, :write, class_methods: [:adapter_name])
     end
   end
 
@@ -26,7 +26,7 @@ RSpec.describe "Abstracta introspection" do
     end
 
     expect { child.validate_implementation! }
-      .to raise_error(Abstracta::Error, /#write.*\.adapter_name/)
+      .to raise_error(AbstractaContracts::Error, /#write.*\.adapter_name/)
   end
 
   it "returns true when explicit validation succeeds" do

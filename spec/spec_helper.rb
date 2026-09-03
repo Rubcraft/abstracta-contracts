@@ -5,7 +5,7 @@ if ENV["COVERAGE"] == "true"
   SimpleCov.start
 end
 
-require "abstracta"
+require "abstracta_contracts"
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
