@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts method visibility" do
   it "allows private instance methods to satisfy a contract" do
     base = Class.new do

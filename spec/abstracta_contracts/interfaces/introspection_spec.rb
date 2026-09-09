@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts interface introspection" do
   it "reports direct and inherited interfaces separately" do
     first = Module.new { include AbstractaContracts.interface(:first) }

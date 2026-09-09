@@ -89,7 +89,7 @@ end
 ```ruby
 cache_contract = AbstractaContracts.with_methods(:read, :write, :delete)
 
-class RedisCache
+RedisCache = Class.new do
   include cache_contract
 
   def read(key) = nil
@@ -185,6 +185,23 @@ RedisCache.missing_interface_class_methods
 - Interfaces remain distinct from abstract classes.
 - Interface requirements can be satisfied by the class, inherited implementations, or interface defaults.
 - AbstractaContracts has no runtime dependencies.
+
+## API reference
+
+Run `bundle exec rake yard` and open `doc/index.html` for the public API.
+The DSL entries on the AbstractaContracts page are methods installed on
+consuming classes. Implementation details under `Internal` are unsupported.
+Interface modules expose `interface?` (always true), `interface_methods`, and
+`interface_class_methods` (frozen, deduplicated symbol arrays including parent
+interfaces). Use `implements` to register an interface for validation; ordinary
+Ruby inclusion alone does not register it as a class requirement.
+
+Validation checks presence, not arity, argument types, or return values.
+The constructor guard validates before forwarding arguments and blocks to
+`new`; it does not prevent lower-level allocation or arbitrary Ruby overrides.
+Rescue `AbstractaContracts::Error` for contract failures. Empty factory inputs
+raise `ArgumentError`; including a factory result in the wrong kind of object
+raises `TypeError`.
 
 ## Development
 

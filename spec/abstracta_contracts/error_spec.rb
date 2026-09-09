@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts errors" do
   it "raises a dedicated error for explicitly abstract classes without missing methods" do
     base = Class.new do

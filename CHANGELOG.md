@@ -2,7 +2,21 @@
 
 All notable changes to AbstractaContracts will be documented in this file.
 
-## [0.1.0] - Unreleased
+## Unreleased
+
+## [0.1.1] - 2026-09-08
+
+### Added
+
+- Public YARD reference, generation task, and documentation check in CI.
+
+### Changed
+
+- Group interface specs by definition, implementation, inheritance, and introspection.
+- Make each spec explicitly load its helper for standalone execution.
+- Correct the reusable-contract README example to preserve local variable scope.
+
+## [0.1.0] - 2026-09-04
 
 ### Added
 

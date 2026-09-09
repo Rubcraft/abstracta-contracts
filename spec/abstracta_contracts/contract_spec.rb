@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe AbstractaContracts do
   describe ".with_methods" do
     it "declares abstract instance methods and prevents incomplete instantiation" do
