@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 module AbstractaContracts
-  VERSION = "0.1.0"
+  # Current gem version.
+  # @return [String]
+  VERSION = "0.1.1"
 end

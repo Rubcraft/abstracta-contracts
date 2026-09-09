@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts reusable contracts" do
   it "can be reused by independent classes" do
     contract = AbstractaContracts.with_methods(:read, :write)

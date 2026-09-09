@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts introspection" do
   let(:base) do
     Class.new do

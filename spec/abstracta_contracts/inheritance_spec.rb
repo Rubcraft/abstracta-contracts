@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts inheritance" do
   it "accumulates contracts through multiple inheritance levels" do
     a = Class.new do

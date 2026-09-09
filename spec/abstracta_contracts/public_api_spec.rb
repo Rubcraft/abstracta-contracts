@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe "AbstractaContracts public API" do
   it "keeps implementation constants behind Internal" do
     expect(AbstractaContracts.const_defined?(:Error, false)).to be(true)
@@ -19,5 +21,9 @@ RSpec.describe "AbstractaContracts public API" do
     end
 
     expect { base.new }.to raise_error(AbstractaContracts::Error, /#run/)
+  end
+
+  it "does not monkey patch Class with implements" do
+    expect(Class.method_defined?(:implements)).to be(false)
   end
 end
