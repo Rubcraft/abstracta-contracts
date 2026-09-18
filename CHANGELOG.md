@@ -4,6 +4,10 @@ All notable changes to AbstractaContracts will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Added Bundler Audit dependency checks to the CI workflow.
+
 ## [0.1.1] - 2026-09-08
 
 ### Added
